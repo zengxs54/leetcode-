@@ -1,4 +1,4 @@
-package Chapter2;
+package 排序;
 
 public class PaiXu {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package Chapter2;
+package 排序;
 
 /**
  * 快速排序

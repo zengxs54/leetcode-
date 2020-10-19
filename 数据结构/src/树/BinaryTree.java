@@ -1,20 +1,72 @@
 package 树;
 
+import 树.printer.BinaryTrees;
+
 import java.math.BigDecimal;
 import java.util.*;
 
 public class BinaryTree {
     public static void main(String[] args) {
-        Integer[] arr = new Integer[]{1, null, 2, 3};
+//        Integer[] arr = new Integer[]{1, null, 2, 3};
 //        Integer[] arr = new Integer[]{1, 2, 3,4,null,null,5,null,6,null,null,7,8};
-        Character[] chars = new Character[]{'A', 'B', 'C', 'D', 'E', 'F', 'G','H',null,null,'I',null,null,'J'};
+//        Character[] chars = new Character[]{'A', 'B', 'C', 'D', 'E', 'F', 'G','H',null,null,'I',null,null,'J'};
+        Integer[] arr = new Integer[]{3, 9, 20, null, null, 15, 7};
         TreeNode root = buildBinaryTree(arr);
-        List<Integer> resultList = new ArrayList<>();
+        System.out.println(Arrays.toString(levelOrder(root)));
+//        System.out.println("mirrorTree(root) = " + mirrorTree(root));
 //        System.out.println("递归法前序遍历："+preorderTraversal(root, resultList));  //前序遍历：递归法
 //        System.out.println("回溯法前序遍历："+preorderRecall(root));   //前序遍历：回溯法
 //        System.out.println("递归法中序遍历："+inorderTraversal(root,resultList));
 //        System.out.println("回溯法中序遍历：" + inorderRecall(root));
 //        System.out.println("后序遍历："+postorderTraversal(root, resultList));
+    }
+
+    //翻转二叉树，本质上是遍历二叉树，递归前中后/层序都可以
+    public static TreeNode mirrorTree(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (root != null && stack.size() != 0) {
+            TreeNode temp = root.left;
+            root.left = root.right;
+            root.right = temp;
+            if (root.left != null)
+                stack.push(root.left);
+            if (root.right != null)
+                stack.push(root.right);
+            root = stack.pop();
+        }
+        return root;
+    }
+
+    /***    二叉树层遍历(广度遍历)
+     * 特例处理： 当树的根节点为空，则直接返回空列表 [] ；
+     * 初始化： 打印结果列表 res = [] ，包含根节点的队列 queue = [root] ；
+     * BFS 循环： 当队列 queue 为空时跳出；
+     * 出队： 队首元素出队，记为 node；
+     * 打印： 将 node.val 添加至列表 tmp 尾部；
+     * 添加子节点： 若 node 的左（右）子节点不为空，则将左（右）子节点加入队列 queue ；
+     * 返回值： 返回打印结果列表 res 即可。
+     *
+     */
+    public static int[] levelOrder(TreeNode root) {
+        ArrayList<Integer> list = new ArrayList<>();
+        if (root == null)
+            return new int[0];
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+        while (queue.size() != 0) {
+            TreeNode poll = queue.poll();
+            list.add((Integer) poll.val);
+            if (poll.left != null)
+                queue.add(poll.left);
+            if (poll.right != null)
+                queue.add(poll.right);
+        }
+        int[] arr = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            arr[i] = list.get(i);
+        }
+        return arr;
     }
 
     /**
@@ -119,6 +171,7 @@ public class BinaryTree {
     /**
      * 中序遍历（回溯法）
      * 永远要先考虑左子树
+     *
      * @param root
      * @param <T>
      * @return
@@ -126,15 +179,15 @@ public class BinaryTree {
     public static <T> List<T> inorderRecall(TreeNode root) {
         List<T> list = new ArrayList<>();
         Stack<TreeNode> stack = new Stack<>();
-        while(root != null || !stack.isEmpty()){
+        while (root != null || !stack.isEmpty()) {
             while (root != null) {
                 stack.push(root);
                 root = root.left;
             }
-            if(!stack.isEmpty()){
+            if (!stack.isEmpty()) {
                 root = stack.pop();
                 list.add((T) root.val);
-                root= root.right;
+                root = root.right;
             }
         }
         return list;
@@ -161,13 +214,12 @@ public class BinaryTree {
      * 二叉树后序遍历（回溯法）
      * 思路：后序遍历在决定是否可以输出当前节点的值的时候，需要考虑其左右子树是否都已经遍历完成。所以需要设置一个lastVisit游标。
      * 若lastVisit等于当前考查节点的右子树，表示该节点的左右子树都已经遍历完成，则可以输出当前节点。
-     *
+     * <p>
      * 并把lastVisit节点设置成当前节点，将当前游标节点node设置为空，下一轮就可以访问栈顶元素。
-     *
+     * <p>
      * 否者，需要接着考虑右子树，node = node.right
-     *
      */
-    public static <T> List<T> postorderRollback(TreeNode root){
+    public static <T> List<T> postorderRollback(TreeNode root) {
         ArrayList<T> arrayList = new ArrayList<>();
         Stack<TreeNode> treeNodeStack = new Stack<TreeNode>();
         TreeNode node = root;

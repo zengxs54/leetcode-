@@ -1,4 +1,4 @@
-package Chapter2;
+package 排序;
 
 /**
  * Timsort是结合了合并排序（merge sort）和插入排序（insertion sort）而得出的排序算法，它在现实中有很好的效率
